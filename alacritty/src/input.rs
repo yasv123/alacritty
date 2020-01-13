@@ -389,13 +389,15 @@ impl<'a, T: EventListener, A: ActionContext<T>> Processor<'a, T, A> {
                 // Don't launch URLs if this click cleared the selection
                 self.ctx.mouse_mut().block_url_launcher = !self.ctx.selection_is_empty();
 
-                self.ctx.clear_selection();
+                if button != MouseButton::Right {
+                    self.ctx.clear_selection();
+                }
 
                 // Start new empty selection
                 let side = self.ctx.mouse().cell_side;
                 if self.ctx.modifiers().ctrl() {
                     self.ctx.block_selection(point, side);
-                } else {
+                } else if button != MouseButton::Right {
                     self.ctx.simple_selection(point, side);
                 }
 
